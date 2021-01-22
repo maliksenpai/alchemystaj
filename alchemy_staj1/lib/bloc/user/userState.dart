@@ -37,3 +37,7 @@ class LoginError extends UserState{
 class HaveUser extends UserState{
 
 }
+
+class LoginState extends UserState{
+
+}

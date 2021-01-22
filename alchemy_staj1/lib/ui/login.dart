@@ -47,7 +47,7 @@ class _LoginPage extends State<LoginPage>{
             state = bloc.state;
             log("list"+state.toString());
             if(state is InitState){
-              loginScreen();
+              //loginScreen();
             }else if(state is LoginLoading){
               return Center(child:CircularProgressIndicator(),);
             }else if(state is LoginSuccess){
@@ -67,9 +67,12 @@ class _LoginPage extends State<LoginPage>{
           builder: (context,state){
             bloc = BlocProvider.of<UserBloc>(context);
             state = bloc.state;
+            //bloc.add(CheckUser());
             log("builder"+state.toString());
             if(state is InitState){
               bloc.add(CheckUser());
+              return Center(child:CircularProgressIndicator(),);
+            }else if(state is LoginState){
               return loginScreen();
             }else if(state is LoginLoading){
               return Center(child:CircularProgressIndicator(),);

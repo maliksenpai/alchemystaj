@@ -25,9 +25,9 @@ class UserBloc extends Bloc<UserEvent,UserState>{
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
-    yield LoginLoading();
-    await Future.delayed(const Duration(seconds: 1));
     if(event is LoginWithNickPass){
+      yield LoginLoading();
+      await Future.delayed(const Duration(seconds: 1));
       try{
 
         var temp = -1;
@@ -63,7 +63,7 @@ class UserBloc extends Bloc<UserEvent,UserState>{
         yield HaveUser();
       }else{
         log("haventuser");
-        yield InitState();
+        yield LoginState();
       }
 
     }
