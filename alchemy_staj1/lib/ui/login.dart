@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:alchemy_staj1/bloc/blocProvider.dart';
-import 'package:alchemy_staj1/bloc/userBloc.dart';
+import 'package:alchemy_staj1/bloc/user/userBloc.dart';
+import 'package:alchemy_staj1/bloc/user/userEvent.dart';
+import 'package:alchemy_staj1/bloc/user/userState.dart';
 import 'package:alchemy_staj1/model/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,45 +12,80 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'menu.dart';
 
-class Login extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-  checkuser(context);
-    return MaterialApp(
-      title: "Login",
-      home: BlocProviderr(
-        bloc: UserBloc(),
-        child: _Loginpage(),
-      )
-    );
-  }
 
-  checkuser(BuildContext context) async{
+  /*checkuser(BuildContext context) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(prefs.getString("name")!=null && prefs.getString("surname")!=null){
+
+    if(prefs.getInt("id")!=null){
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Menu()));
     }
-  }
+  }*/
 
-}
 
-class _Loginpage extends StatefulWidget{
+class LoginPage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
-    return Loginpage();
+    return _LoginPage();
   }
 
 }
 
-class Loginpage extends State<_Loginpage>{
-  UserBloc bloc;
+class _LoginPage extends State<LoginPage>{
+  UserBloc bloc = UserBloc();
   String user="deneme";
+  TextEditingController namecontroller=new TextEditingController();
+  TextEditingController surnamecontroller = new TextEditingController();
   @override
   Widget build(BuildContext context) {
-    bloc = BlocProviderr.of<UserBloc>(context);
-    bloc.changeName(" ");
-    bloc.changeSurnname(" ");
+
     return Scaffold(
+      appBar: AppBar(title: Text("LoginPage"),),
+      body: SafeArea(
+        child: BlocConsumer<UserBloc,UserState>(
+          listener: (context,state) async {
+            bloc = BlocProvider.of<UserBloc>(context);
+            state = bloc.state;
+            log("list"+state.toString());
+            if(state is InitState){
+              loginScreen();
+            }else if(state is LoginLoading){
+              return Center(child:CircularProgressIndicator(),);
+            }else if(state is LoginSuccess){
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BlocProvider.value(value: bloc,child: MenuPage(),)  ));
+              return Container();
+            }else if(state is LoginError){
+              return Center(child: Text("Hata:"+state.error),);
+            }else if(state is HaveUser){
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BlocProvider.value(value: bloc,child: MenuPage(),)  ));
+              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MenuPage() ));
+              return Container();
+            }else{
+              return Container();
+            }
+
+          },
+          builder: (context,state){
+            bloc = BlocProvider.of<UserBloc>(context);
+            state = bloc.state;
+            log("builder"+state.toString());
+            if(state is InitState){
+              bloc.add(CheckUser());
+              return loginScreen();
+            }else if(state is LoginLoading){
+              return Center(child:CircularProgressIndicator(),);
+            }else if(state is LoginError){
+              return errorScreen(state.error);
+            }else if(state is HaveUser){
+              return Container();
+            }else{
+              return Container();
+            }
+          },
+        ),
+      ),
+    );
+
+    /*return Scaffold(
       appBar: AppBar(title: Text("Login Page"),),
       body: Column(
         children: [
@@ -59,69 +96,72 @@ class Loginpage extends State<_Loginpage>{
           Center(
             child: Column(
               children: [
-                name(bloc),
-                surname(bloc),
-                login(bloc),
-                StreamBuilder(
-                    stream: bloc.checkstream,
-                    builder: (context,snapshot){
-                      if(snapshot.data==true){
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Menu()));
-                        return Text(" ");
-                      }else{
-                        return Text(" ");
-                      }
-                    }
-                )
+                name(bloc,namecontroller),
+                surname(bloc,surnamecontroller),
+                login(bloc,namecontroller,surnamecontroller),
               ],
             ),
           )
         ],
       ),
+    );*/
+  }
+
+  Widget loginScreen(){
+    return Column(
+      children: [
+        name(),
+        surname(),
+        login()
+      ],
     );
   }
 
-  Widget name(UserBloc bloc){
-    return StreamBuilder(
-        stream: bloc.namestream,
-        builder: (context,snapshot){
+  Widget errorScreen(String error){
+    return Center(
+        child: Column(
+          children:
+          [
+            Text("Hata:"+error),
+            RaisedButton( onPressed: () => bloc.add(ErrorBack()),child: Text("Tekrar dene"),)
+          ],
+        )
+    );
+  }
+
+  Widget name(){
           return TextField(
-            onChanged: bloc.changeName,
+            controller: namecontroller,
             decoration: InputDecoration(
               labelText: "İsim",
               icon: Icon(Icons.account_box_sharp)
             ),
           );
         }
+
+  Widget surname(){
+    return TextField(
+      controller: surnamecontroller,
+      decoration: InputDecoration(
+          labelText: "Soyisim",
+          icon: Icon(Icons.supervisor_account)
+      ),
     );
   }
 
-  Widget surname(UserBloc bloc){
-    return StreamBuilder(
-        stream: bloc.surnamestream,
-        builder: (context,snapshot){
-          return TextField(
-            onChanged: bloc.changeSurnname,
-            decoration: InputDecoration(
-                labelText: "Soyisim",
-                icon: Icon(Icons.supervisor_account)
-            ),
-          );
-        }
+
+  Widget login(){
+    return RaisedButton(
+      onPressed: () => bloc.add(LoginWithNickPass(name: namecontroller.text,surname: surnamecontroller.text)),
+      child: Text("Giris yap"),
+      color: Colors.blue,
     );
   }
 
-  Widget login(UserBloc bloc){
-    return StreamBuilder<bool>(
-        stream: bloc.submitlogin,
-        builder: (context,snapshot){
-          return RaisedButton(
-                onPressed: snapshot.hasError? null : bloc.submit,
-                child: Text("Giris yap"),
-                color: Colors.blue,
 
-          );
-        }
-    );
-  }
 }
+
+
+
+
+

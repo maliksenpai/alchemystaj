@@ -1,5 +1,9 @@
+import 'package:alchemy_staj1/bloc/menu/menuBloc.dart';
 import 'package:alchemy_staj1/ui/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/user/userBloc.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,14 +13,34 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => UserBloc()),
+        BlocProvider(create: (context) => MenuBloc())
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: LoginPage(),
+      ),
+    );
+
+    /*return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Login(),
-    );
+      home: BlocProvider(
+        create: (context) {
+          return UserBloc();
+        },
+        child: LoginPage(),
+      )
+    );*/
   }
 }
 
