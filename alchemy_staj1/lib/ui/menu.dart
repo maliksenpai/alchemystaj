@@ -38,8 +38,8 @@ class _MenuPage extends State<MenuPage>{
         appBar: AppBar(title: Text("Menu"),),
         body: SafeArea(
           child: BlocConsumer<MenuBloc,MenuState>(
+            cubit: bloc,
             listener: (context,state){
-              bloc = BlocProvider.of<MenuBloc>(context);
               state = bloc.state;
               log("list:"+state.toString());
               if(state is BooksState){
@@ -53,7 +53,6 @@ class _MenuPage extends State<MenuPage>{
               }
             },
             builder: (contextt,state){
-              bloc = BlocProvider.of<MenuBloc>(context);
               state = bloc.state;
               log("build:"+state.toString());
               if(state is BooksState){
