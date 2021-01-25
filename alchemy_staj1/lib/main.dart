@@ -1,3 +1,4 @@
+import 'package:alchemy_staj1/bloc/cart/cartBloc.dart';
 import 'package:alchemy_staj1/bloc/menu/menuBloc.dart';
 import 'package:alchemy_staj1/ui/login.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => UserBloc()),
-        BlocProvider(create: (context) => MenuBloc())
+        BlocProvider(create: (context) => MenuBloc()),
+        BlocProvider(create: (context) => CartBloc())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

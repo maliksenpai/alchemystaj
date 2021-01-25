@@ -1,6 +1,8 @@
 import 'dart:developer';
-
 import 'package:alchemy_staj1/bloc/blocProvider.dart';
+import 'package:alchemy_staj1/bloc/cart/cartBloc.dart';
+import 'package:alchemy_staj1/bloc/cart/cartEvent.dart';
+import 'package:alchemy_staj1/bloc/cart/cartState.dart';
 import 'package:alchemy_staj1/bloc/menu/menuBloc.dart';
 import 'package:alchemy_staj1/bloc/menu/menuEvent.dart';
 import 'package:alchemy_staj1/bloc/menu/menuState.dart';
@@ -8,6 +10,7 @@ import 'package:alchemy_staj1/model/author.dart';
 import 'package:alchemy_staj1/model/book.dart';
 import 'package:alchemy_staj1/model/loans.dart';
 import 'package:alchemy_staj1/ui/bookdetail.dart';
+import 'package:alchemy_staj1/ui/cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +38,12 @@ class _MenuPage extends State<MenuPage>{
       });
     }
     return Scaffold(
-        appBar: AppBar(title: Text("Menu"),),
+        appBar: AppBar(title: Text("Menu"),actions: [
+          GestureDetector(
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider.value(value: bloc,child: CartPage(),)  )),
+            child: Icon(Icons.shopping_cart),
+          )
+        ],),
         body: SafeArea(
           child: BlocConsumer<MenuBloc,MenuState>(
             cubit: bloc,
@@ -112,30 +120,51 @@ class _MenuPage extends State<MenuPage>{
       }
     }
     controller.addListener(_scrollListener);
-
-
+    CartBloc cartBloc = BlocProvider.of<CartBloc>(context);
     return StreamBuilder(
         stream: bloc.bookstream,
         builder: (BuildContext context,AsyncSnapshot<List<Book>> snapshot){
           log("veri kontrol");
           if(snapshot.hasData){
-
-            var list = snapshot.data;
-            return ListView.builder(
-              itemCount: list.length,
-              controller: controller,
-              itemBuilder: (BuildContext context,int index){
-                  return ListTile(
-                    onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetail()));},
-                    leading:CachedNetworkImage(
-                      imageUrl: list[index].image,
-                      progressIndicatorBuilder: (context,url,downloadProgress) => CircularProgressIndicator(value: downloadProgress.progress,),
-                      errorWidget: (context,url,error) => Text("Fotoğraf yüklenemedi"),
-                    ),
-                    title: Text(list[index].name),
-                    trailing: list[index].isAvailable ? Text("Kiralanabilir",style: TextStyle(color: Colors.green),) : Text("Şuan kiralanamaz",style: TextStyle(color: Colors.red),),
-                    subtitle: Text("Sayfa sayısı:"+list[index].pageCount.toString()),
+            return StreamBuilder(
+              stream: cartBloc.bookstream,
+              builder: (BuildContext context,AsyncSnapshot<List<Book>> snapshot2){
+                var list = snapshot.data;
+                if(!snapshot2.hasData){
+                  cartBloc.add(InitList());
+                }
+                if(snapshot2.hasData){
+                  var cartlist = snapshot2.data;
+                  return ListView.builder(
+                    itemCount: list.length,
+                    controller: controller,
+                    itemBuilder: (BuildContext context,int index){
+                      return ListTile(
+                        onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetail()));},
+                        leading:CachedNetworkImage(
+                          imageUrl: list[index].image,
+                          progressIndicatorBuilder: (context,url,downloadProgress) => CircularProgressIndicator(value: downloadProgress.progress,),
+                          errorWidget: (context,url,error) => Text("Fotoğraf yüklenemedi"),
+                        ),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(list[index].name),
+                            Row(
+                              children: [
+                                list[index].isAvailable ? Text("Kiralanabilir",style: TextStyle(color: Colors.green),) : Text("Şuan kiralanamaz",style: TextStyle(color: Colors.red),),
+                                list[index].isAvailable ? cartlist.contains(list[index]) ? RaisedButton(onPressed: () {cartBloc.add(RemoveItem(book: list[index]));},child: Text("Sepetten çıkart"),) : RaisedButton(onPressed: () {cartBloc.add(AddItem(book: list[index]));},child: Text("Sepete ekle"),) : Container()
+                              ],
+                            )
+                          ],
+                        ),
+                        subtitle: Text("Sayfa sayısı:"+list[index].pageCount.toString()),
+                      );
+                    },
                   );
+                }else{
+                  return Center(child: Text("Boş"),);
+                }
               },
             );
           }else{
