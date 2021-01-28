@@ -178,9 +178,9 @@ class MenuItems{
 
   ];
   List<Author> authors = [
-    Author(authorId: 1, name: "Deneme1", surname: "1Deneme"),
-    Author(authorId: 2, name: "Deneme2", surname: "2Deneme"),
-    Author(authorId: 3, name: "Deneme3", surname: "3Deneme")
+    Author(authorId: 1, name: "Deneme1", surname: "1Deneme",photo: "https://i.picsum.photos/id/962/200/300.jpg?hmac=wvuv8EVOoNE5J3sBkBx-1wcVHNbgJ_Z1dS98YhnShjM"),
+    Author(authorId: 2, name: "Deneme2", surname: "2Deneme",photo: "https://i.picsum.photos/id/209/200/300.jpg?hmac=O_heTT23fut3YnBKcsYxjoH_MCl9YGPcxXx-ZHOjBgc"),
+    Author(authorId: 3, name: "Deneme3", surname: "3Deneme",photo: "https://i.picsum.photos/id/428/200/300.jpg?hmac=yZnpqAvuXjLW6NjhE0OFa2GwK6XcNLPBIrI3yr4yFsk")
   ];
 
   List<Loan> loans = [

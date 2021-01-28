@@ -20,22 +20,30 @@ class CartBloc extends Bloc<CartEvent,CartState>{
     if(event is AddItem){
       //var temp = _books.value;
       var temp = CartData().cartList;
-      log(temp.length.toString());
       temp.add(event.book);
       _books.sink.add(temp);
       CartData().cartList=temp;
       yield InitState();
     }else if(event is RemoveItem){
       var temp = CartData().cartList;
-      log(temp.length.toString());
-      temp.remove(event.book);
+      //var temp = _books.value;
+      temp.removeWhere((element) => element.bookId==event.book.bookId);
       _books.sink.add(temp);
       CartData().cartList=temp;
       yield InitState();
     }else if(event is InitList){
       var temp = CartData().cartList;
-      log(temp.length.toString()+"bb");
+      //var temp = List<Book>();
       _books.sink.add(temp);
+      CartData().cartList=temp;
+      yield InitState();
+    }else if(event is CompleteLoan){
+      yield CompletedState();
+    }else if(event is ErrorLoan){
+      yield ErrorState(error: event.error);
+    }else if(event is ClearLoan){
+      var temp = CartData().cartList;
+      temp.clear();
       CartData().cartList=temp;
       yield InitState();
     }

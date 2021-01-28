@@ -30,3 +30,20 @@ class RemoveItem extends CartEvent{
 class InitList extends CartEvent{
 
 }
+
+class CompleteLoan extends CartEvent{
+
+}
+
+class ErrorLoan extends CartEvent{
+  String error;
+
+  ErrorLoan({@required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class ClearLoan extends CartEvent{
+
+}

@@ -20,12 +20,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MenuPage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
-    return _MenuPage();
+    return MenuPageState();
   }
+
 }
 
 
-class _MenuPage extends State<MenuPage>{
+class MenuPageState extends State<MenuPage>{
+
   int index;
   MenuBloc bloc = MenuBloc();
   @override
@@ -37,12 +39,23 @@ class _MenuPage extends State<MenuPage>{
         bloc.add(ChangeMenuEvent(page: 0));
       });
     }
+
+
     return Scaffold(
         appBar: AppBar(title: Text("Menu"),actions: [
-          GestureDetector(
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider.value(value: bloc,child: CartPage(),)  )),
-            child: Icon(Icons.shopping_cart),
-          )
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: GestureDetector(
+              onTap: () {
+                var result = Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider.value(value: bloc,child: CartPage(),)  ));
+                result.then((value) {
+                  if(value){
+                    setState(() { });
+                  }
+                });//sayfanın tekrardan yenilenmesi için eğer olmazsa pop yaptıktan sonra bloc değişsede view değişmez
+              },
+              child: Icon(Icons.shopping_cart),
+            ),),
         ],),
         body: SafeArea(
           child: BlocConsumer<MenuBloc,MenuState>(
@@ -92,11 +105,12 @@ class _MenuPage extends State<MenuPage>{
     );
 
 
-
-
   }
 
 
+  refresh(){
+    setState(() { });
+  }
 
 
   void changePage(int i){
@@ -121,6 +135,7 @@ class _MenuPage extends State<MenuPage>{
     }
     controller.addListener(_scrollListener);
     CartBloc cartBloc = BlocProvider.of<CartBloc>(context);
+
     return StreamBuilder(
         stream: bloc.bookstream,
         builder: (BuildContext context,AsyncSnapshot<List<Book>> snapshot){
@@ -139,13 +154,19 @@ class _MenuPage extends State<MenuPage>{
                     itemCount: list.length,
                     controller: controller,
                     itemBuilder: (BuildContext context,int index){
+                      bool check = false;
+                      cartlist.forEach((element) {
+                        if(element.bookId==list[index].bookId){
+                          check=true;
+                        }
+                      });
                       return ListTile(
-                        onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetail()));},
+                        onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetailPage(book: list[index],)));},
                         leading:CachedNetworkImage(
-                          imageUrl: list[index].image,
+                         imageUrl: list[index].image,
                           progressIndicatorBuilder: (context,url,downloadProgress) => CircularProgressIndicator(value: downloadProgress.progress,),
                           errorWidget: (context,url,error) => Text("Fotoğraf yüklenemedi"),
-                        ),
+                        ),  //karekod okutma ve 
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -153,7 +174,7 @@ class _MenuPage extends State<MenuPage>{
                             Row(
                               children: [
                                 list[index].isAvailable ? Text("Kiralanabilir",style: TextStyle(color: Colors.green),) : Text("Şuan kiralanamaz",style: TextStyle(color: Colors.red),),
-                                list[index].isAvailable ? cartlist.contains(list[index]) ? RaisedButton(onPressed: () {cartBloc.add(RemoveItem(book: list[index]));},child: Text("Sepetten çıkart"),) : RaisedButton(onPressed: () {cartBloc.add(AddItem(book: list[index]));},child: Text("Sepete ekle"),) : Container()
+                                list[index].isAvailable ? check ? RaisedButton(onPressed: () {cartBloc.add(RemoveItem(book: list[index]));},child: Text("Sepetten çıkart"),) : RaisedButton(onPressed: () {cartBloc.add(AddItem(book: list[index]));},child: Text("Sepete ekle"),) : Container()
                               ],
                             )
                           ],
@@ -186,6 +207,11 @@ class _MenuPage extends State<MenuPage>{
             itemCount: list.length,
             itemBuilder: (BuildContext context,int index){
               return ListTile(
+                leading:CachedNetworkImage(
+                  imageUrl: list[index].photo,
+                  progressIndicatorBuilder: (context,url,downloadProgress) => CircularProgressIndicator(value: downloadProgress.progress,),
+                  errorWidget: (context,url,error) => Text("Fotoğraf yüklenemedi"),
+                ),
                 title: Text(list[index].name),
                 subtitle: Text(list[index].surname),
               );
