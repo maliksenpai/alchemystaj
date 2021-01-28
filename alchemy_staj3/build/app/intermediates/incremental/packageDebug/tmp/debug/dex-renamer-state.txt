@@ -1,0 +1,4 @@
+#Wed Jan 27 15:48:26 EET 2021
+base.0=C\:\\Users\\eacun\\Documents\\GitHub\\alchemystaj\\alchemy_staj3\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
