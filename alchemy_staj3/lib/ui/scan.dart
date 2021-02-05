@@ -3,11 +3,14 @@ import 'dart:developer';
 import 'package:alchemy_staj3/bloc/scan/scanBloc.dart';
 import 'package:alchemy_staj3/bloc/scan/scanEvent.dart';
 import 'package:alchemy_staj3/bloc/scan/scanState.dart';
+import 'package:alchemy_staj3/ui/datepage.dart';
+import 'package:alchemy_staj3/ui/datepage2.dart';
 import 'package:alchemy_staj3/ui/generate.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScanPage extends StatefulWidget{
   @override
@@ -34,7 +37,8 @@ class _ScanPage extends State<ScanPage>{
               },
                 child: Text("QR kod okut"),
               ),
-              RaisedButton(child: Text("QR kod oluştur"),onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider.value(value: bloc,child: GeneratePage(),))))
+              RaisedButton(child: Text("QR kod oluştur"),onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider.value(value: bloc,child: GeneratePage(),)))),
+              RaisedButton(child: Text(AppLocalizations.of(context).randevuAl),onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider.value(value: bloc,child: ReservationPage(),)))),
             ],
           ),
         )

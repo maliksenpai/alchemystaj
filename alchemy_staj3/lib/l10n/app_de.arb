@@ -1,0 +1,22 @@
+{
+  "isim": "Name",
+  "@isim": {
+    "desc": "Kisi ismi"
+  },
+  "soyisim": "Nachname",
+  "zipKodu": "Postleitzahl",
+  "adres": "Adresse",
+  "mail":"Mail",
+  "telefonNumarasi": "Telefonnummer",
+  "kimlikNumarasi": "Identifikationsnummer",
+  "kisiyiEkle": "Kontakt hinzufügen",
+  "randevuAl": "Einen Termin Machen",
+  "erkek": "Männlich",
+  "kadin": "Frau",
+  "cinsiyetSec": "Wähle Geschlecht",
+  "randevuicinkisiekle": "Kontakt für Termin hinzufügen",
+  "turkiye": "Türkei",
+  "ingiltere": "England",
+  "almanya": "Deutschland",
+  "bokBirakma": "Füllen Sie dieses Feld aus"
+}

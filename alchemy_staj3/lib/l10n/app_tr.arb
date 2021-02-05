@@ -1,0 +1,22 @@
+{
+  "isim": "İsim",
+  "@isim": {
+    "desc": "Kisi ismi"
+  },
+  "soyisim": "Soyisim",
+  "zipKodu": "Zip Kodu",
+  "adres": "Adres",
+  "mail": "Mail",
+  "telefonNumarasi": "Telefon Numarası",
+  "kimlikNumarasi": "Kimlik Numarası",
+  "kisiyiEkle": "Kişiyi Ekle",
+  "randevuAl": "Randevu Al",
+  "erkek": "Erkek",
+  "kadin": "Kadin",
+  "cinsiyetSec": "Cinsiyet Sec",
+  "randevuIcinKisiEkle": "Randevu için kişi ekle",
+  "turkiye": "Türkiye",
+  "ingiltere": "İngiltere",
+  "almanya": "Almanya",
+  "bosBirakma":"Bos Bırakma"
+}

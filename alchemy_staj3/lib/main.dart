@@ -1,7 +1,11 @@
+import 'package:alchemy_staj3/bloc/date/dateBloc.dart';
+import 'package:alchemy_staj3/bloc/reservation/reservationBloc.dart';
 import 'package:alchemy_staj3/bloc/scan/scanBloc.dart';
 import 'package:alchemy_staj3/ui/scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; //burayı eklemezsen l10n çalışmaz
 
 import 'bloc/generate/generateBloc.dart';
 
@@ -16,7 +20,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => ScanBloc()),
-        BlocProvider(create: (context) => GenerateBloc())
+        BlocProvider(create: (context) => GenerateBloc()),
+        BlocProvider(create: (context) => DateBloc()),
+        BlocProvider(create: (context) => ReservationBloc())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -25,6 +31,16 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: ScanPage(),
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale("en",""),
+          const Locale("de",""),
+          const Locale("tr","")
+        ],
       ),
     );
   }

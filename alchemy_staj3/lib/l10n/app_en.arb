@@ -1,0 +1,57 @@
+{
+  "isim": "Name",
+  "@isim": {
+    "desc": "Kisi ismi"
+  },
+  "soyisim": "Surname",
+  "@soyisim": {
+    "desc": "Kisi soyisim"
+  },
+  "zipKodu": "Zip Code",
+  "@zipKodu": {
+    "desc": "Ev Zip kodu"
+  },
+  "adres": "Address",
+  "@adres": {
+    "desc": "Evin adresi"
+  },
+  "mail": "Mail",
+  "@mail": {},
+  "telefonNumarasi": "Phone number",
+  "@telefonNumarasi": {
+    "desc": "Telefon numarası"
+  },
+  "kimlikNumarasi": "Identification Number",
+  "@kimlikNumarasi": {
+    "desc": "Tc kimlik numarası"
+  },
+  "kisiyiEkle": "Add Person",
+  "@kisiyiEkle": {
+    "desc": "Kisiyi Ekle"
+  },
+  "randevuAl": "Make An Reservation",
+  "@randevuAl": {
+    "desc": "Randevu Al"
+  },
+  "erkek": "Man",
+  "@erkek": {
+
+  },
+  "kadin": "Woman",
+  "@kadin": {
+  },
+  "cinsiyetSec": "Select gender",
+  "@cinsiyetSec": {
+
+  },
+  "randevuIcinKisiEkle": "Add contact for reservation",
+  "@randevuIcinKisiEkle": {},
+  "turkiye": "Turkey",
+  "@turkiye": {},
+  "ingiltere": "England",
+  "@ingiltere": {},
+  "almanya": "Germany",
+  "@almanya": {},
+  "bosBirakma": "Fill this area",
+  "@bosBirakma": {}
+}
