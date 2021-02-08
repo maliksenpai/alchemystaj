@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:alchemy_staj3/bloc/reservation/reservationBloc.dart';
 import 'package:alchemy_staj3/bloc/reservation/reservationEvent.dart';
 import 'package:alchemy_staj3/data/persons.dart';
+import 'package:alchemy_staj3/model/e_order.dart';
+import 'package:alchemy_staj3/model/e_order_details.dart';
 import 'package:alchemy_staj3/model/l_product.dart';
 import 'package:alchemy_staj3/model/person.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,32 +13,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddTest extends StatefulWidget{
 
-  Person person;
-  int index;
+  e_Order person;
 
-  AddTest({@required this.person,@required this.index});
+  AddTest({@required this.person});
   @override
-  State<StatefulWidget> createState() => _AddTest(person: person,index: index);
+  State<StatefulWidget> createState() => _AddTest(person: person);
 
 }
 
 class _AddTest extends State<AddTest>{
 
-  Person person;
-  int index;
+  e_Order person;
 
-  _AddTest({@required this.person,@required this.index});
+  _AddTest({@required this.person});
 
   List<L_Product> tests = [
-   L_Product(id: 1,company_id: 1,product_name: "Test 1",unit_price: 20),
-   L_Product(id: 2,company_id: 1,product_name: "Test 2",unit_price: 40),
-   L_Product(id: 3,company_id: 2,product_name: "Test 3",unit_price: 30),
-   L_Product(id: 4,company_id: 3,product_name: "Test 4",unit_price: 50),
+   L_Product(id: 1,unit_price: 20),
+   L_Product(id: 2,unit_price: 40),
+   L_Product(id: 3,unit_price: 30),
+   L_Product(id: 4,unit_price: 50),
   ];
-  L_Product test = L_Product(id: 1,company_id: 1,product_name: "Test 1",unit_price: 20);
+  L_Product test = L_Product(id: 1,unit_price: 20);
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(title: Text("deneme"),),
       body: SafeArea(
@@ -46,7 +47,7 @@ class _AddTest extends State<AddTest>{
             Text("Marka 1",style: TextStyle(fontSize: 20),),
             Container(height: 5,color: Colors.blueAccent,),
             RadioListTile(
-              title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [Text(tests[0].product_name),Text(tests[0].unit_price.toString())],),
+              title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [Text("Test 1"),Text(tests[0].unit_price.toString())],),
               value: tests[0],
               groupValue: test,
               onChanged: (value){
@@ -56,7 +57,7 @@ class _AddTest extends State<AddTest>{
               },
             ),
             RadioListTile(
-              title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [Text(tests[1].product_name),Text(tests[1].unit_price.toString())],),
+              title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [Text("Test 2"),Text(tests[1].unit_price.toString())],),
               value: tests[1],
               groupValue: test,
               onChanged: (value){
@@ -68,7 +69,7 @@ class _AddTest extends State<AddTest>{
             Text("Marka 2",style: TextStyle(fontSize: 20),),
             Container(height: 5,color: Colors.blueAccent,),
             RadioListTile(
-              title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [Text(tests[2].product_name),Text(tests[2].unit_price.toString())],),
+              title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [Text("Test 3"),Text(tests[2].unit_price.toString())],),
               value: tests[2],
               groupValue: test,
               onChanged: (value){
@@ -80,7 +81,7 @@ class _AddTest extends State<AddTest>{
             Text("Marka 3",style: TextStyle(fontSize: 20),),
             Container(height: 5,color: Colors.blueAccent,),
             RadioListTile(
-              title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [Text(tests[3].product_name),Text(tests[3].unit_price.toString())],),
+              title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [Text("Test 4"),Text(tests[3].unit_price.toString())],),
               value: tests[3],
               groupValue: test,
               onChanged: (value){
@@ -92,13 +93,17 @@ class _AddTest extends State<AddTest>{
             RaisedButton(
               child: Text("Testi Seç"),
               onPressed: (){
-                if(person.products==null){
+                var id = Persons().orderid;
+                e_Order_Details order_detail = new e_Order_Details(id: id,l_product_id: test.id,e_order_person_id: person.id,amount: test.unit_price);
+                id++;
+                Persons().orderid=id;
+                /*if(person==null){
                   person.products=List<L_Product>();
-                }
+                }*/
                 //person.products.add(test);
                 //Persons().reservationInfo.persons[index]=person;
                 ReservationBloc bloc = BlocProvider.of(context);
-                bloc.add(AddProduct(l_product: test,person: person,index: index));
+                bloc.add(AddProduct(order_detail: order_detail));
                 Navigator.of(context).pop(true);
               },
             )

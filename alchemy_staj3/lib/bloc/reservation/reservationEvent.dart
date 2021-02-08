@@ -1,33 +1,35 @@
 import 'package:alchemy_staj3/model/e_order.dart';
+import 'package:alchemy_staj3/model/e_order_details.dart';
 import 'package:alchemy_staj3/model/l_product.dart';
 import 'package:alchemy_staj3/model/person.dart';
 import 'package:alchemy_staj3/model/slot.dart';
+import 'package:flutter/cupertino.dart';
 
 class ReservationEvent{
 
 }
 
 class AddPerson extends ReservationEvent{
-  Person person;
+  e_Order person;
 
   AddPerson({this.person});
 }
 
 class AddProduct extends ReservationEvent{
-  L_Product l_product;
+  /*L_Product l_product;
   Person person;
-  int index;
+  int index;*/
+  e_Order_Details order_detail;
 
-  AddProduct({this.l_product,this.person,this.index});
+  AddProduct({this.order_detail});
 }
 
 class SelectSlot extends ReservationEvent{
   Slot slot;
-  Person person;
+  e_Order_Details order_detail;
   int index;
-  int index2;
 
-  SelectSlot({this.slot,this.person,this.index,this.index2});
+  SelectSlot({this.slot,this.order_detail,this.index});
 }
 
 class SendOrder extends ReservationEvent{
@@ -49,4 +51,10 @@ class ToSelectSlot extends ReservationEvent{
 
 class ToSelectProduct extends ReservationEvent{
 
+}
+
+class ChangeContactPerson extends ReservationEvent{
+  int id;
+
+  ChangeContactPerson({@required this.id});
 }

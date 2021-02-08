@@ -1,5 +1,7 @@
 import 'package:alchemy_staj3/bloc/reservation/reservationBloc.dart';
 import 'package:alchemy_staj3/bloc/reservation/reservationEvent.dart';
+import 'package:alchemy_staj3/data/persons.dart';
+import 'package:alchemy_staj3/model/e_order_details.dart';
 import 'package:alchemy_staj3/model/person.dart';
 import 'package:alchemy_staj3/model/slot.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
@@ -13,24 +15,22 @@ import 'package:time_picker_widget/time_picker_widget.dart';
 
 class SelectSlotPage extends StatefulWidget {
 
-  Person person;
+  e_Order_Details order_detail;
   int index;
-  int index2;
 
-  SelectSlotPage({this.person,this.index, this.index2});
+  SelectSlotPage({@required this.order_detail,@required this.index});
 
   @override
-  State<StatefulWidget> createState() => _SelectSlot(person: person,index:index,index2: index2);
+  State<StatefulWidget> createState() => _SelectSlot(order_detail: order_detail,index: index);
 
 }
 
 class _SelectSlot extends State<SelectSlotPage> {
 
-  Person person;
+  e_Order_Details order_detail;
   int index;
-  int index2;
 
-  _SelectSlot({this.person, this.index,this.index2});
+  _SelectSlot({@required this.order_detail,@required this.index});
 
   DateTime date = DateTime.now();
   List<String> times =
@@ -119,15 +119,29 @@ class _SelectSlot extends State<SelectSlotPage> {
         date.year, date.month, date.day, time.hour, time.minute);
     DateTime endDate = new DateTime(
         date.year, date.month, date.day, time.hour, time.minute + 10);
+    int id;
+    if(order_detail.slot_id==null){
+      id = Persons().slot_id;
+      id++;
+      Persons().slot_id=id;
+      order_detail.slot_id=id;
+    }else{
+      id =order_detail.slot_id;
+    }
+
     Slot slot = Slot(
-        id: 1,
+        id: id,
+        slot_date: startDate.millisecondsSinceEpoch.toString(),
         slot_start: startDate.millisecondsSinceEpoch.toString(),
         slot_time_end: endDate.millisecondsSinceEpoch.toString(),
         slot_time_period: 10,
         active: false
     );
+
     ReservationBloc bloc = BlocProvider.of<ReservationBloc>(context);
-    bloc.add(SelectSlot(slot: slot,person: person,index: index,index2: index2));
+    bloc.add(SelectSlot(slot: slot,order_detail: order_detail,index: index));
+    Navigator.of(context).pop(true);
+    //bloc.add(SelectSlot(slot: slot,person: person,index: index,index2: index2));
     //person.products[index2].slot = slot;
 
   }

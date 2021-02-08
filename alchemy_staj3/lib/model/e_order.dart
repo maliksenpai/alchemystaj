@@ -9,7 +9,7 @@ class e_Order extends Equatable {
   bool is_accepted_privary_policy;
   bool is_accepted_service_policy;
   int company_id;
-  List<Person> persons;
+  Person person;
 
   e_Order(
       {this.id,
@@ -19,7 +19,7 @@ class e_Order extends Equatable {
       this.is_accepted_privary_policy,
       this.is_accepted_service_policy,
       this.company_id,
-      this.persons});
+      this.person});
 
   @override
   List<Object> get props => [
@@ -30,6 +30,6 @@ class e_Order extends Equatable {
         is_accepted_privary_policy,
         is_contact_person,
         company_id,
-        persons
+        person
       ];
 }
